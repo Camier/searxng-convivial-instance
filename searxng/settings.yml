@@ -1,0 +1,132 @@
+# Searxng Convivial Instance Configuration
+# Custom settings for our digital salon
+
+use_default_settings: true
+
+general:
+  instance_name: "Digital Salon 🌟"
+  contact_url: false
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+  default_lang: "all"
+  max_page: 5
+  
+ui:
+  default_locale: "en"
+  query_in_title: true
+  infinite_scroll: true
+  default_theme: "simple"
+  simple_style: "light"
+  
+  # Custom theme configuration
+  theme_args:
+    simple_style: auto
+    
+# Redis configuration for our features
+redis:
+  cache_host: "redis-cache"
+  cache_port: 6379
+  pubsub_host: "redis-pubsub"  
+  pubsub_port: 6380
+  
+# PostgreSQL for collections
+postgres:
+  host: "postgres"
+  database: "searxng_convivial"
+  user: "searxng"
+  password: "${POSTGRES_PASSWORD}"
+
+# Convivial features
+convivial:
+  max_friends: 3
+  morning_coffee_hour: 8
+  collision_window_minutes: 60
+  gift_reveal_delay_hours: 24
+  
+# Engine configuration focused on our needs
+engines:
+  # Academic engines
+  - name: google scholar
+    engine: google_scholar
+    shortcut: gs
+    
+  - name: semantic scholar  
+    engine: json_engine
+    shortcut: ss
+    search_url: https://api.semanticscholar.org/graph/v1/paper/search?query={query}&limit=10
+    
+  - name: pubmed
+    engine: pubmed
+    shortcut: pm
+    
+  # French archives
+  - name: gallica
+    engine: xpath
+    shortcut: gal
+    search_url: https://gallica.bnf.fr/SRU?version=1.2&operation=searchRetrieve&query={query}
+    
+  - name: archives nationales
+    engine: json_engine
+    shortcut: an
+    search_url: https://www.siv.archives-nationales.culture.gouv.fr/siv/IR/resultats.action?formCaller=IR&irMode=2&view=list&q={query}
+    
+  # Botanical
+  - name: gbif
+    engine: json_engine
+    shortcut: gbif
+    search_url: https://api.gbif.org/v1/species/search?q={query}&limit=20
+    
+  - name: plants of the world
+    engine: xpath
+    shortcut: pow
+    search_url: http://www.plantsoftheworldonline.org/taxon/search?q={query}
+    
+  # Music (no Spotify)
+  - name: bandcamp
+    engine: xpath
+    shortcut: bc
+    search_url: https://bandcamp.com/search?q={query}
+    
+  - name: soundcloud
+    engine: soundcloud
+    shortcut: sc
+    
+  - name: free music archive
+    engine: xpath
+    shortcut: fma
+    search_url: https://freemusicarchive.org/search?q={query}
+    
+  # Standard engines
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    
+# Enabled plugins
+enabled_plugins:
+  - 'oa_doi_rewrite'
+  - 'ahmia_filter'
+  - 'convivial_presence'
+  - 'discovery_feed'
+  - 'search_moods'
+  
+# Server settings
+server:
+  bind_address: "0.0.0.0"
+  port: 8080
+  secret_key: "${SEARXNG_SECRET_KEY}"
+  base_url: "https://${SEARXNG_HOSTNAME}/"
+  image_proxy: true
+  
+# Privacy settings  
+privacy:
+  autocomplete:
+    duckduckgo: true
+    google: false
+  query_log: false

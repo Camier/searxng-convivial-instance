@@ -1,0 +1,50 @@
+services:
+  # Searxng Web Service
+  - type: web
+    name: searxng-convivial
+    env: docker
+    dockerfilePath: ./Dockerfile.render
+    envVars:
+      - key: SEARXNG_BASE_URL
+        value: https://your-app.onrender.com
+      - key: SEARXNG_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: searxng-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: searxng-redis
+          type: redis
+          property: connectionString
+
+  # WebSocket Service
+  - type: web
+    name: searxng-websocket
+    env: node
+    buildCommand: cd websocket-server && npm install
+    startCommand: cd websocket-server && node server.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: searxng-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: searxng-redis
+          type: redis
+          property: connectionString
+
+# Databases
+databases:
+  - name: searxng-db
+    databaseName: searxng_convivial
+    user: searxng
+    plan: starter
+
+# Redis
+services:
+  - type: redis
+    name: searxng-redis
+    plan: starter

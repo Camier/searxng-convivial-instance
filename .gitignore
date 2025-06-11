@@ -1,33 +1,34 @@
+# Environment
+.env
+.env.local
+.env.production
+
+# Docker volumes
+postgres-data/
+redis-cache-data/
+
+# SSL certificates
+certbot/conf/
+certbot/www/
+
+# Logs
+*.log
+logs/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 venv/
 ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# SearXNG specific
-searxng/settings.yml
-searxng.log
-*.db
-*.sqlite3
 
 # IDE
 .vscode/
@@ -40,6 +41,16 @@ searxng.log
 .DS_Store
 Thumbs.db
 
-# Docker
+# Backups
+*.sql
+*.bak
+backup/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Local development
 docker-compose.override.yml
-.env.local
+searxng/settings_local.yml
