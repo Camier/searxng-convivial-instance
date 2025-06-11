@@ -13,7 +13,9 @@ if [ ! -f .env ]; then
 fi
 
 # Load environment variables
-export $(cat .env | grep -v '^#' | xargs)
+set -a
+source .env
+set +a
 
 # Check required variables
 if [ -z "$SEARXNG_SECRET_KEY" ] || [ -z "$POSTGRES_PASSWORD" ]; then
@@ -71,11 +73,11 @@ fi
 
 # Build WebSocket server
 echo "🔨 Building WebSocket server..."
-docker-compose build websocket-server
+docker compose build websocket-server
 
 # Start services
 echo "🚀 Starting services..."
-docker-compose up -d
+docker compose up -d
 
 # Wait for services to be ready
 echo "⏳ Waiting for services to start..."
@@ -83,7 +85,7 @@ sleep 10
 
 # Check service health
 echo "🏥 Checking service health..."
-docker-compose ps
+docker compose ps
 
 # Initialize SSL if needed
 if [ ! -d "certbot/conf/live/${SEARXNG_HOSTNAME}" ]; then
@@ -91,7 +93,7 @@ if [ ! -d "certbot/conf/live/${SEARXNG_HOSTNAME}" ]; then
     echo "Please make sure your domain is pointing to this server!"
     read -p "Press enter to continue with SSL setup..."
     
-    docker-compose run --rm certbot certonly --webroot \
+    docker compose run --rm certbot certonly --webroot \
         --webroot-path=/var/www/certbot \
         --email ${SSL_EMAIL:-admin@${SEARXNG_HOSTNAME}} \
         --agree-tos \
@@ -99,13 +101,13 @@ if [ ! -d "certbot/conf/live/${SEARXNG_HOSTNAME}" ]; then
         -d ${SEARXNG_HOSTNAME}
     
     # Restart Nginx with SSL
-    docker-compose restart nginx
+    docker compose restart nginx
 fi
 
 echo "✅ Searxng Convivial Instance is running!"
 echo "🌐 Access at: https://${SEARXNG_HOSTNAME}"
 echo ""
-echo "📊 View logs: docker-compose logs -f"
-echo "🛑 Stop: docker-compose down"
+echo "📊 View logs: docker compose logs -f"
+echo "🛑 Stop: docker compose down"
 echo ""
 echo "🎉 Happy searching with friends!"
