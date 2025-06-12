@@ -1,0 +1,101 @@
+# Convivial Patterns in SearXNG Project
+
+## Core Philosophy
+The "convivial" concept centers around creating a warm, social search experience for small groups of friends (2-3 people). It's designed as a "digital salon" that emphasizes:
+- Shared discovery over individual efficiency
+- Intellectual companionship
+- Privacy with trust
+- Joy-driven design choices
+
+## Key Convivial Features
+
+### 1. Real-Time Presence & Awareness
+- **Presence Bubbles**: Visual indicators showing when friends are online/searching
+- **Search Activity**: Shows what friends are currently exploring (with privacy controls)
+- **Ghost Mode**: Toggle for private/sensitive searches
+- **Collision Detection**: Celebrates when friends search for the same things simultaneously
+- **Ambient Awareness**: Gentle notifications rather than intrusive alerts
+
+### 2. Social Discovery Features
+- **Morning Coffee**: Daily digest of yesterday's collective discoveries
+  - Coffee cup reactions (☕☕☕) instead of likes
+  - AI-generated summaries of group discoveries
+  - Theme extraction from search patterns
+- **Discovery Feed**: Real-time stream of friend findings
+- **Gift Wrapper**: Wrap discoveries as time-delayed gifts for friends
+  - Customizable reveal times (1 hour to 1 week)
+  - Different gift themes (classic, birthday, mystery, seasonal)
+  - "Shake gift" feature for hints
+
+### 3. Search Moods & Themes
+Predefined search moods that adjust UI and boost relevant engines:
+- 🌙 Late night rabbit hole
+- 🌺 Sunday morning botanical  
+- 🍄 Weird finds only
+- 📚 Serious research mode
+- 🎵 Vinyl digging simulation
+- 🗺️ Historical adventures
+- 🔬 Deep science dive
+- 🎪 Anything goes
+
+### 4. Privacy Implementation
+- **Trust-Based Model**: Small group (max 3 friends) with mutual trust
+- **Selective Sharing**: Granular controls over what to share
+- **Auto-Privacy**: Automatic privacy for medical/personal searches
+- **"Unsee" Button**: Remove accidental shares
+- **No Logs Policy**: Privacy-first approach
+- **Anonymous Contributions**: Option to contribute without attribution
+
+### 5. Technical Architecture
+- **Backend**: SearXNG with custom Python plugins
+- **Real-time**: WebSocket server (Node.js/Socket.io)
+- **Storage**: PostgreSQL for user data, Redis for caching/pub-sub
+- **Frontend**: Custom JavaScript with collaborative features
+- **Deployment**: Docker-based, designed for small VPS (~$20-40/month)
+
+## Unique Implementations
+
+### Plugin System
+Custom plugins extend SearXNG:
+1. `convivial_presence.py`: Tracks friend activity and collisions
+2. `morning_coffee.py`: Generates daily discovery digests
+3. `gift_wrapper.py`: Time-delayed discovery sharing
+4. `discovery_feed.py`: Real-time discovery stream
+5. `search_moods.py`: Context-aware search themes
+
+### WebSocket Integration
+- Real-time presence updates
+- Live search hints (anonymized)
+- Instant collision celebrations
+- Gift notifications
+- Synchronized UI changes
+
+### UI/UX Patterns
+- Gentle animations (bob, pulse, fade)
+- Warm color schemes per mood
+- Tooltip-based information
+- Non-intrusive notifications
+- Organic visualization of collections
+
+### Data Models
+- Search sessions with mood tracking
+- Discoveries with social metadata
+- Time capsules for delayed sharing
+- Collision events
+- Coffee reactions
+
+## Privacy-First Design
+- No external tracking
+- Local-first approach
+- Encrypted friend connections
+- Temporary data with TTLs
+- Opt-in for all social features
+
+## Cultural Elements
+- French archives specialization
+- Botanical/ethnopharmacology focus
+- Independent music discovery
+- Academic research tools
+- Seasonal themes and rituals
+
+This creates a unique blend of privacy-respecting search with intimate social features, designed for small groups who trust each other and want to explore the internet together.

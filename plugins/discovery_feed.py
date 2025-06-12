@@ -199,6 +199,11 @@ async def _suggest_gift(user: Dict, discovery: Dict):
     try:
         # Find friends who might enjoy this
         with pg_pool.cursor() as cursor:
+            # Properly escape the LIKE pattern to prevent issues
+            search_term = discovery.get('query', '').split()[0] if discovery.get('query') else ''
+            # Escape special characters in LIKE patterns
+            search_term = search_term.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+            
             cursor.execute("""
                 SELECT DISTINCT u.id, u.username, COUNT(*) as shared_interests
                 FROM users u
@@ -208,7 +213,7 @@ async def _suggest_gift(user: Dict, discovery: Dict):
                 GROUP BY u.id, u.username
                 ORDER BY shared_interests DESC
                 LIMIT 1
-            """, (user['id'], f"%{discovery['query'].split()[0]}%"))
+            """, (user['id'], f"%{search_term}%"))
             
             potential_recipient = cursor.fetchone()
             

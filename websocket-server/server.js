@@ -83,21 +83,40 @@ io.use(async (socket, next) => {
       return next(new Error('Authentication required'));
     }
     
-    // For development, accept any token
-    // In production, verify JWT
-    if (process.env.NODE_ENV === 'production') {
+    // Always verify JWT properly
+    try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      socket.userId = decoded.userId;
-      socket.username = decoded.username;
-    } else {
-      // Dev mode: extract from token directly
-      socket.userId = socket.handshake.auth.userId || 'dev-user';
-      socket.username = socket.handshake.auth.username || 'Developer';
+      
+      // Verify token with auth service
+      const authResponse = await fetch(`${process.env.AUTH_SERVICE_URL || 'http://auth-service:5000'}/auth/verify`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (authResponse.ok) {
+        const authData = await authResponse.json();
+        socket.userId = authData.user_id;
+        socket.username = authData.claims.username;
+        socket.userRole = authData.claims.role;
+      } else {
+        return next(new Error('Token verification failed'));
+      }
+    } catch (jwtError) {
+      // Fallback for development only
+      if (process.env.NODE_ENV !== 'production' && socket.handshake.auth.userId) {
+        socket.userId = socket.handshake.auth.userId;
+        socket.username = socket.handshake.auth.username || 'Developer';
+        socket.userRole = 'friend';
+        logger.warn('Development mode: Using unverified auth data');
+      } else {
+        return next(new Error('Invalid token'));
+      }
     }
     
     next();
   } catch (err) {
-    next(new Error('Invalid token'));
+    next(new Error('Authentication failed'));
   }
 });
 
